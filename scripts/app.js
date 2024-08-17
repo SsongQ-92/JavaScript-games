@@ -1,0 +1,18 @@
+const images = [
+  'cheetah.jpg',
+  'duck.jpg',
+  'elephant.jpg',
+  'kitty.jpg',
+  'monkey.jpg',
+  'racoon.jpg',
+  'sheep.jpg',
+  'zebra.jpg',
+  'cheetah.jpg',
+  'duck.jpg',
+  'elephant.jpg',
+  'kitty.jpg',
+  'monkey.jpg',
+  'racoon.jpg',
+  'sheep.jpg',
+  'zebra.jpg',
+];
