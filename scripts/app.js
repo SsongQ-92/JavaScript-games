@@ -23,12 +23,11 @@ let lockBoard = false;
 let matchedPairs = 0;
 const $board = document.getElementById('board');
 const $timeElement = document.getElementById('timer');
-const $startBtn = document.getElementById('$startBtn');
-let timeLeft = 100;
+const $startBtn = document.getElementById('startBtn');
+const $overlay = document.getElementById('overlay');
+let timeLeft = 60;
 let timer;
-
-// Shuffle images
-images.sort(() => 0.5 - Math.random());
+let isPlaying = false;
 
 // flipCard Func
 const flipCard = function () {
@@ -53,7 +52,8 @@ const checkForMatch = function () {
     matchedPairs++;
     if (matchedPairs === images.length / 2) {
       clearInterval(timer);
-      alert('성공!');
+      // alert('성공!');
+      $overlay.classList.remove('transparent');
     }
   } else {
     unFlipCards();
@@ -82,19 +82,29 @@ const unFlipCards = function () {
   }, 800);
 };
 
+// startTimer Func
 const startTimer = function () {
   timer = setInterval(() => {
     timeLeft--;
     $timeElement.textContent = `${timeLeft}`;
     if (timeLeft === 0) {
-      clearInterval(timer);
       alert('시간 초과!');
+      clearInterval(timer);
+      timeLeft = 60;
     }
   }, 1000);
 };
 
 // Create Cards
 $startBtn.addEventListener('click', () => {
+  if (isPlaying) return;
+  if (!$overlay.classList.contains('transparent')) $overlay.classList.add('transparent');
+
+  // Shuffle Cards
+  images.sort(() => 0.5 - Math.random());
+
+  isPlaying = true;
+
   images.forEach(image => {
     const $card = document.createElement('div');
     $card.classList.add('card');
@@ -103,4 +113,18 @@ $startBtn.addEventListener('click', () => {
     $card.addEventListener('click', flipCard);
     $board.appendChild($card);
   });
+
+  startTimer();
+});
+
+// Remove Overlay
+$overlay.addEventListener('click', () => {
+  isPlaying = false;
+  $board.innerHTML = '';
+
+  clearInterval(timer);
+  timeLeft = 100;
+  $timeElement.textContent = '60';
+
+  $overlay.classList.add('transparent');
 });
