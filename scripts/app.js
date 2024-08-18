@@ -24,6 +24,7 @@ let matchedPairs = 0;
 const $board = document.getElementById('board');
 const $timeElement = document.getElementById('timer');
 const $startBtn = document.getElementById('startBtn');
+const $resetBtn = document.getElementById('resetBtn');
 const $overlay = document.getElementById('overlay');
 let timeLeft = 60;
 let timer;
@@ -117,13 +118,23 @@ $startBtn.addEventListener('click', () => {
   startTimer();
 });
 
+// Reset Game
+$resetBtn.addEventListener('click', () => {
+  isPlaying = false;
+  $board.innerHTML = '';
+
+  clearInterval(timer);
+  timeLeft = 60;
+  $timeElement.textContent = '60';
+});
+
 // Remove Overlay
 $overlay.addEventListener('click', () => {
   isPlaying = false;
   $board.innerHTML = '';
 
   clearInterval(timer);
-  timeLeft = 100;
+  timeLeft = 60;
   $timeElement.textContent = '60';
 
   $overlay.classList.add('transparent');

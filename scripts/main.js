@@ -1,24 +1,15 @@
 const { app, BrowserWindow } = require('electron');
-const localShortcut = require('electron-localshortcut');
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1080,
+    height: 800,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
     },
   });
 
   win.loadFile('index.html');
-
-  localShortcut.register(win, 'F12', () => {
-    win.webContents.openDevTools();
-  });
-
-  win.on('close', () => {
-    localShortcut.unregisterAll(win);
-  });
 }
 
 app.whenReady().then(() => {
