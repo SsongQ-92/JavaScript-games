@@ -122,6 +122,7 @@ $startBtn.addEventListener('click', () => {
 $resetBtn.addEventListener('click', () => {
   isPlaying = false;
   $board.innerHTML = '';
+  matchedPairs = 0;
 
   clearInterval(timer);
   timeLeft = 60;
