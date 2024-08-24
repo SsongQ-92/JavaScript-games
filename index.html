@@ -14,23 +14,47 @@
       rel="stylesheet"
     />
     <script defer type="module" src="./scripts/app.js"></script>
-    <title>같은그림찾기 게임 | Same-pic Game</title>
+    <title>Text RPG 게임</title>
   </head>
   <body>
-    <header>같은 그림 찾기 게임</header>
+    <header>Text RPG 게임</header>
     <main>
-      <div class="board" id="board"></div>
-      <div class="info" id="info">
-        <button id="startBtn">게임 시작</button>
-        <button id="resetBtn">게임 리셋</button>
-        <div id="timer-box">
-          <div>남은 시간</div>
-          <div id="timer">60</div>
+      <!-- 게임 시작 화면 -->
+      <form id="start-screen">
+        <input type="text" id="name-input" placeholder="주인공 이름을 입력하세요!" />
+        <button id="start">시작</button>
+      </form>
+
+      <!-- 게임 실행 화면 -->
+      <div id="game-screen">
+        <div id="hero-stat">
+          <span id="hero-name"></span>
+          <span id="hero-level"></span>
+          <span id="hero-hp"></span>
+          <span id="hero-xp"></span>
+          <span id="hero-att"></span>
+        </div>
+        <form id="game-menu">
+          <div id="menu-1">1. 모험</div>
+          <div id="menu-2">2. 휴식</div>
+          <div id="menu-3">3. 종료</div>
+          <input type="text" id="menu-input" />
+          <button id="menu-button">입력</button>
+        </form>
+        <form id="battle-menu">
+          <div id="battle-1">1. 공격</div>
+          <div id="battle-2">2. 회복</div>
+          <div id="battle-3">3. 도망</div>
+          <input type="text" id="battle-input" />
+          <button id="battle-button">입력</button>
+        </form>
+        <div id="message"></div>
+        <div id="monter-stat">
+          <span id="monster-name"></span>
+          <span id="monster-hp"></span>
+          <span id="monster-att"></span>
         </div>
       </div>
     </main>
-    <div class="overlay transparent" id="overlay">
-      <img src="assets/images/successLogo.png" alt="성공 이미지" width="400" height="400" />
-    </div>
   </body>
 </html>
