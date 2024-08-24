@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/styles/reset.css" />
     <link rel="stylesheet" href="assets/styles/style.css" />
-    <link rel="icon" href="/assets/images/icon.jpg" />
+    <link rel="icon" href="/assets/images/monster.jpg" />
     <!-- Google Fonts - Noto Sans KR -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,10 +14,10 @@
       rel="stylesheet"
     />
     <script defer type="module" src="./scripts/app.js"></script>
-    <title>Text RPG 게임</title>
+    <title>Monster Hunter</title>
   </head>
   <body>
-    <header>Text RPG 게임</header>
+    <header>Monster Hunter</header>
     <main>
       <!-- 게임 시작 화면 -->
       <form id="start-screen">
@@ -27,32 +27,31 @@
 
       <!-- 게임 실행 화면 -->
       <div id="game-screen">
-        <div id="hero-stat">
-          <span id="hero-name"></span>
-          <span id="hero-level"></span>
-          <span id="hero-hp"></span>
-          <span id="hero-xp"></span>
-          <span id="hero-att"></span>
+        <div id="hero-stat" class="transparent">
+          <span id="hero-name">1. 캐릭터 이름: </span>
+          <span id="hero-level">2. 캐릭터 레벨: </span>
+          <span id="hero-hp">3. 캐릭터 HP: </span>
+          <span id="hero-xp">4. 캐릭터 XP: </span>
+          <span id="hero-att">5. 캐릭터 공격력: </span>
         </div>
-        <form id="game-menu">
-          <div id="menu-1">1. 모험</div>
-          <div id="menu-2">2. 휴식</div>
-          <div id="menu-3">3. 종료</div>
-          <input type="text" id="menu-input" />
-          <button id="menu-button">입력</button>
-        </form>
-        <form id="battle-menu">
-          <div id="battle-1">1. 공격</div>
-          <div id="battle-2">2. 회복</div>
-          <div id="battle-3">3. 도망</div>
-          <input type="text" id="battle-input" />
-          <button id="battle-button">입력</button>
-        </form>
-        <div id="message"></div>
-        <div id="monter-stat">
-          <span id="monster-name"></span>
-          <span id="monster-hp"></span>
-          <span id="monster-att"></span>
+        <div class="divide-line transparent" id="first-divide-line"></div>
+        <div id="game-menu" class="menu transparent">
+          <div id="menu-1">모험하기</div>
+          <div id="menu-2">휴식하기</div>
+          <div id="menu-3">종료하기</div>
+        </div>
+        <div id="battle-menu" class="menu transparent">
+          <div id="battle-1">공격하기</div>
+          <div id="battle-2">회복하기</div>
+          <div id="battle-3">도망가기</div>
+        </div>
+        <div class="divide-line transparent" id="second-divide-line"></div>
+        <div id="message" class="transparent"></div>
+        <div class="divide-line transparent" id="third-divide-line"></div>
+        <div id="monster-stat" class="transparent">
+          <span id="monster-name">1. 몬스터 이름: </span>
+          <span id="monster-hp">2. 몬스터 HP: </span>
+          <span id="monster-att">3. 몬스터 공격력: </span>
         </div>
       </div>
     </main>
