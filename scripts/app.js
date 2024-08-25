@@ -20,6 +20,9 @@ const $menuExit = document.querySelector('#menu-3');
 
 // 3. battle menu
 const $battleMenu = document.querySelector('#battle-menu');
+const $battleAttack = document.querySelector('#battle-1');
+const $battleRecover = document.querySelector('#battle-2');
+const $battleFlee = document.querySelector('#battle-3');
 
 const $secondDivideLine = document.querySelector('#second-divide-line');
 
@@ -34,51 +37,132 @@ const $monsterName = document.querySelector('#monster-name');
 const $monsterHp = document.querySelector('#monster-hp');
 const $monsterAtt = document.querySelector('#monster-att');
 
-const createHero = function () {
-  const hero = {
-    name: '',
-    level: 1,
-    maxHp: 100,
-    hp: 100,
-    xp: 0,
-    att: 10,
+class Game {
+  constructor() {
+    this.monsterList = [
+      { name: '슬라임', hp: 25, att: 10, xp: 10 },
+      { name: '스켈레톤', hp: 50, att: 15, xp: 20 },
+      { name: '마왕', hp: 150, att: 35, xp: 50 },
+    ];
+    this.hero = null;
+    this.heroName = null;
+    this.randomMonster = null;
+  }
+
+  start() {
+    $menuAdventure.addEventListener('click', this.clickAdventureMenu);
+    $battleAttack.addEventListener('click', this.clickBattleAttack);
+
+    this.hero = new Hero(1, 100, 100, 0, 10);
+    this.hero.changeName(this.heroName);
+    this.hero.displayHeroStat();
+
+    this.changeScreen('gameScreen');
+  }
+
+  changeScreen(screen) {
+    if (screen === 'gameScreen') {
+      $startScreen.classList.toggle('transparent');
+      $heroStat.classList.toggle('transparent');
+      $firstDivideLine.classList.toggle('transparent');
+      $gameMenu.classList.toggle('transparent');
+    } else if (screen === 'adventure') {
+      $gameMenu.classList.toggle('transparent');
+      $battleMenu.classList.toggle('transparent');
+      $secondDivideLine.classList.toggle('transparent');
+      $monsterStat.classList.toggle('transparent');
+    } else if (screen === 'battle') {
+      $thirdDivideLine.classList.toggle('transparent');
+      $message.classList.toggle('transparent');
+    }
+  }
+
+  clickAdventureMenu = () => {
+    this.changeScreen('adventure');
+
+    this.randomMonster = new Monster(this.monsterList);
+    this.randomMonster.displayMonsterStat();
   };
 
-  return {
-    changeHeroName(name) {
-      hero.name = name;
-    },
-    displayHeroStat() {
-      $heroName.textContent += hero.name;
-      $heroLevel.textContent += `${hero.level}`;
-      $heroHp.textContent += `${hero.hp}/${hero.maxHp}`;
-      $heroXp.textContent += `${hero.xp}/${15 * hero.level}`;
-      $heroAtt.textContent += `${hero.att}`;
-    },
-  };
-};
+  clickBattleAttack = () => {
+    this.changeScreen('battle');
 
-const createMonster = function () {
-  let monster = null;
-  const monsterList = [
-    { name: '슬라임', hp: 25, att: 10, xp: 10 },
-    { name: '스켈레톤', hp: 50, att: 15, xp: 20 },
-    { name: '마왕', hp: 150, att: 35, xp: 50 },
-  ];
-
-  return {
-    createRandomMonster() {
-      monster = structuredClone(monsterList[Math.floor(Math.random() * monsterList.length)]);
-      return monster;
-    },
-    displayRandomMonsterStat() {
-      monster.maxHp = monster.hp;
-      $monsterName.textContent += monster.name;
-      $monsterHp.textContent += `${monster.hp}/${monster.maxHp}`;
-      $monsterAtt.textContent += monster.att;
-    },
+    this.hero.attack(this.randomMonster);
+    this.randomMonster.attack(this.hero);
+    this.hero.updateHeroStat();
+    this.randomMonster.updateMonsterStat();
+    $message.textContent = `${this.hero.att}의 데미지를 주고, ${this.randomMonster.att}의 데미지를 받았다!`;
   };
-};
+}
+
+class Hero {
+  constructor(level, maxHp, hp, xp, att) {
+    this.name = null;
+    this.level = level;
+    this.maxHp = maxHp;
+    this.hp = hp;
+    this.xp = xp;
+    this.att = att;
+  }
+
+  changeName(name) {
+    this.name = name;
+  }
+
+  displayHeroStat() {
+    $heroName.textContent += this.name;
+    $heroLevel.textContent += `${this.level}`;
+    $heroHp.textContent += `${this.hp}/${this.maxHp}`;
+    $heroXp.textContent += `${this.xp}/${15 * this.level}`;
+    $heroAtt.textContent += `${this.att}`;
+  }
+
+  updateHeroStat() {
+    $heroLevel.textContent = `2. 캐릭터 레벨: ${this.level}`;
+    $heroHp.textContent = `3. 캐릭터 HP: ${this.hp}/${this.maxHp}`;
+    $heroXp.textContent = `4. 캐릭터 XP: ${this.xp}/${15 * this.level}`;
+    $heroAtt.textContent = `5. 캐릭터 공격력: ${this.att}`;
+  }
+
+  attack(monster) {
+    monster.hp -= this.att;
+  }
+
+  heal(monster) {
+    this.stat.hp += 20;
+    this.stat.hp -= monster.att;
+  }
+}
+
+class Monster {
+  constructor(monsterList) {
+    const randomMonster = structuredClone(
+      monsterList[Math.floor(Math.random() * monsterList.length)]
+    );
+    this.name = randomMonster.name;
+    this.hp = randomMonster.hp;
+    this.maxHp = randomMonster.hp;
+    this.att = randomMonster.att;
+    this.xp = randomMonster.xp;
+  }
+
+  displayMonsterStat() {
+    $monsterName.textContent += this.name;
+    $monsterHp.textContent += `${this.hp}/${this.maxHp}`;
+    $monsterAtt.textContent += this.att;
+  }
+
+  updateMonsterStat() {
+    $monsterHp.textContent = `2. 몬스터 HP: ${this.hp}/${this.maxHp}`;
+    $monsterAtt.textContent = `3. 몬스터 공격력: ${this.att}`;
+  }
+
+  attack(target) {
+    target.hp -= this.att;
+  }
+}
+
+let game = null;
 
 $startScreen.addEventListener('submit', e => {
   e.preventDefault();
@@ -86,23 +170,7 @@ $startScreen.addEventListener('submit', e => {
   const name = e.target['name-input'].value;
   if (name.trim() === '') return;
 
-  $startScreen.style.cssText = 'display: none;';
-  $heroStat.classList.toggle('transparent');
-  $firstDivideLine.classList.toggle('transparent');
-  $gameMenu.classList.toggle('transparent');
-
-  const hero = createHero();
-  hero.changeHeroName(name);
-  hero.displayHeroStat();
-});
-
-$menuAdventure.addEventListener('click', () => {
-  $gameMenu.classList.toggle('transparent');
-  $battleMenu.classList.toggle('transparent');
-  $secondDivideLine.classList.toggle('transparent');
-  $monsterStat.classList.toggle('transparent');
-
-  const monster = createMonster();
-  monster.createRandomMonster();
-  monster.displayRandomMonsterStat();
+  game = new Game();
+  game.heroName = name;
+  game.start();
 });

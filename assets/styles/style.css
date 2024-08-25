@@ -111,6 +111,11 @@ div.menu > div:hover {
   font-weight: 700;
 }
 
+#message {
+  width: 300px;
+  color: salmon;
+}
+
 div#monster-stat {
   display: flex;
   flex-direction: column;
