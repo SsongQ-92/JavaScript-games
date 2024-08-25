@@ -55,6 +55,9 @@ const checkForMatch = function () {
       clearInterval(timer);
       // alert('성공!');
       $overlay.classList.remove('transparent');
+      setTimeout(() => {
+        $overlay.classList.add('transparent');
+      }, 2000);
     }
   } else {
     unFlipCards();
@@ -127,16 +130,4 @@ $resetBtn.addEventListener('click', () => {
   clearInterval(timer);
   timeLeft = 60;
   $timeElement.textContent = '60';
-});
-
-// Remove Overlay
-$overlay.addEventListener('click', () => {
-  isPlaying = false;
-  $board.innerHTML = '';
-
-  clearInterval(timer);
-  timeLeft = 60;
-  $timeElement.textContent = '60';
-
-  $overlay.classList.add('transparent');
 });
