@@ -75,11 +75,11 @@ class Game {
     } else if (screen === 'adventure') {
       $gameMenu.classList.toggle('transparent');
       $battleMenu.classList.toggle('transparent');
-      $secondDivideLine.classList.toggle('transparent');
+      $secondDivideLine.classList.toggle('transparent', false);
       $monsterStat.classList.toggle('transparent');
       $thirdDivideLine.classList.toggle('transparent');
-      $message.classList.toggle('transparent');
-    } else if (screen === 'start') {
+      $message.classList.toggle('transparent', false);
+    } else if (screen === 'home') {
       $startScreen.classList.toggle('transparent');
       $heroStat.classList.toggle('transparent');
       $firstDivideLine.classList.toggle('transparent');
@@ -103,6 +103,9 @@ class Game {
       $battleMenu.classList.toggle('transparent');
       $thirdDivideLine.classList.toggle('transparent');
       $monsterStat.classList.toggle('transparent');
+      $monsterName.textContent = '1. 몬스터 이름: ';
+      $monsterHp.textContent = '2. 몬스터 HP: ';
+      $monsterAtt.textContent = '3. 몬스터 공격력: ';
     } else if (screen === 'dead') {
       $fourthDivideLine.classList.toggle('transparent');
       $homeButton.classList.toggle('transparent');
@@ -123,6 +126,7 @@ class Game {
     this.hero.updateHeroStat();
     if (this.hero.hp <= 0) {
       this.changeScreen('dead');
+      $battleAttack.removeEventListener('click', this.clickBattleAttack);
       this.showMessage(`${this.hero.level} 레벨에서 전사. 새 캐릭터를 생성하세요.`);
     } else if (this.randomMonster.hp <= 0) {
       const prevLevel = this.hero.level;
@@ -153,9 +157,8 @@ class Game {
     this.hero = null;
     this.randomMonster = null;
     $menuAdventure.removeEventListener('click', this.clickAdventureMenu);
-    $battleAttack.removeEventListener('click', this.clickBattleAttack);
     $homeButton.removeEventListener('click', this.clickHomeButton);
-    this.changeScreen('start');
+    this.changeScreen('home');
     game = null;
   }
 }
