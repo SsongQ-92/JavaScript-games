@@ -1,5 +1,6 @@
 // 게임 시작 화면 관련
 const $startScreen = document.querySelector('#start-screen');
+const $heroNameInput = document.querySelector('#name-input');
 
 // 게임 실행 화면 관련
 // 1. hero stat
@@ -37,6 +38,9 @@ const $monsterName = document.querySelector('#monster-name');
 const $monsterHp = document.querySelector('#monster-hp');
 const $monsterAtt = document.querySelector('#monster-att');
 
+const $fourthDivideLine = document.querySelector('#fourth-divide-line');
+const $homeButton = document.querySelector('#go-to-home');
+
 class Game {
   constructor() {
     this.monsterList = [
@@ -52,6 +56,7 @@ class Game {
   start() {
     $menuAdventure.addEventListener('click', this.clickAdventureMenu);
     $battleAttack.addEventListener('click', this.clickBattleAttack);
+    $homeButton.addEventListener('click', this.clickHomeButton);
 
     this.hero = new Hero(1, 100, 100, 0, 10);
     this.hero.changeName(this.heroName);
@@ -66,14 +71,41 @@ class Game {
       $heroStat.classList.toggle('transparent');
       $firstDivideLine.classList.toggle('transparent');
       $gameMenu.classList.toggle('transparent');
+      $heroNameInput.value = '';
     } else if (screen === 'adventure') {
       $gameMenu.classList.toggle('transparent');
       $battleMenu.classList.toggle('transparent');
       $secondDivideLine.classList.toggle('transparent');
       $monsterStat.classList.toggle('transparent');
-    } else if (screen === 'battle') {
       $thirdDivideLine.classList.toggle('transparent');
       $message.classList.toggle('transparent');
+    } else if (screen === 'start') {
+      $startScreen.classList.toggle('transparent');
+      $heroStat.classList.toggle('transparent');
+      $firstDivideLine.classList.toggle('transparent');
+      $battleMenu.classList.toggle('transparent');
+      $secondDivideLine.classList.toggle('transparent');
+      $monsterStat.classList.toggle('transparent');
+      $thirdDivideLine.classList.toggle('transparent');
+      $message.classList.toggle('transparent');
+      $heroName.textContent = '1. 캐릭터 이름: ';
+      $heroLevel.textContent = '2. 캐릭터 레벨: ';
+      $heroHp.textContent = '3. 캐릭터 HP: ';
+      $heroXp.textContent = '4. 캐릭터 XP: ';
+      $heroAtt.textContent = '5. 캐릭터 공격력: ';
+      $monsterName.textContent = '1. 몬스터 이름: ';
+      $monsterHp.textContent = '2. 몬스터 HP: ';
+      $monsterAtt.textContent = '3. 몬스터 공격력: ';
+      $fourthDivideLine.classList.toggle('transparent');
+      $homeButton.classList.toggle('transparent');
+    } else if (screen === 'endAdventure') {
+      $gameMenu.classList.toggle('transparent');
+      $battleMenu.classList.toggle('transparent');
+      $thirdDivideLine.classList.toggle('transparent');
+      $monsterStat.classList.toggle('transparent');
+    } else if (screen === 'dead') {
+      $fourthDivideLine.classList.toggle('transparent');
+      $homeButton.classList.toggle('transparent');
     }
   }
 
@@ -82,17 +114,50 @@ class Game {
 
     this.randomMonster = new Monster(this.monsterList);
     this.randomMonster.displayMonsterStat();
+    this.showMessage(`몬스터와 마주쳤다! ${this.randomMonster.name}인 것 같다!`);
   };
 
   clickBattleAttack = () => {
-    this.changeScreen('battle');
-
     this.hero.attack(this.randomMonster);
     this.randomMonster.attack(this.hero);
     this.hero.updateHeroStat();
-    this.randomMonster.updateMonsterStat();
-    $message.textContent = `${this.hero.att}의 데미지를 주고, ${this.randomMonster.att}의 데미지를 받았다!`;
+    if (this.hero.hp <= 0) {
+      this.changeScreen('dead');
+      this.showMessage(`${this.hero.level} 레벨에서 전사. 새 캐릭터를 생성하세요.`);
+    } else if (this.randomMonster.hp <= 0) {
+      const prevLevel = this.hero.level;
+      this.showMessage(`몬스터를 잡아 ${this.randomMonster.xp} 경험치를 얻었다!`);
+      this.hero.getXp(this.randomMonster.xp);
+      if (this.hero.level > prevLevel) this.showMessage(`레벨업! 레벨 ${this.hero.level}!`);
+      this.hero.updateHeroStat();
+      this.randomMonster = null;
+      this.changeScreen('endAdventure');
+    } else {
+      this.showMessage(``);
+      this.randomMonster.updateMonsterStat();
+      this.showMessage(
+        `${this.hero.att}의 데미지를 주고, ${this.randomMonster.att}의 데미지를 받았다!`
+      );
+    }
   };
+
+  clickHomeButton = () => {
+    this.quit();
+  };
+
+  showMessage(text) {
+    $message.textContent = text;
+  }
+
+  quit() {
+    this.hero = null;
+    this.randomMonster = null;
+    $menuAdventure.removeEventListener('click', this.clickAdventureMenu);
+    $battleAttack.removeEventListener('click', this.clickBattleAttack);
+    $homeButton.removeEventListener('click', this.clickHomeButton);
+    this.changeScreen('start');
+    game = null;
+  }
 }
 
 class Hero {
@@ -103,6 +168,7 @@ class Hero {
     this.hp = hp;
     this.xp = xp;
     this.att = att;
+    this.dead = false;
   }
 
   changeName(name) {
@@ -131,6 +197,18 @@ class Hero {
   heal(monster) {
     this.stat.hp += 20;
     this.stat.hp -= monster.att;
+  }
+
+  getXp(xp) {
+    this.xp += xp;
+
+    if (this.xp >= this.level * 15) {
+      this.xp -= this.level * 15;
+      this.level += 1;
+      this.maxHp += 5;
+      this.att += 5;
+      this.hp = this.maxHp;
+    }
   }
 }
 
